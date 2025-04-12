@@ -10,6 +10,7 @@ import SwiftUI
 struct ContentView: View {
     
     @StateObject private var model = ArrayAndHashing()
+    @StateObject private var binarySearch = BinarySearch()
     
     var body: some View {
         VStack {
@@ -17,6 +18,7 @@ struct ContentView: View {
                 .imageScale(.large)
                 .foregroundStyle(.tint)
             Text("Two Sum Result: \(model.result.map(String.init).joined(separator: ", "))")
+            Text("Binary Search Result: \(binarySearch.result)")
         }
         .padding()
     }
