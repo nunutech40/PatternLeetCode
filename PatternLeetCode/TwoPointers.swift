@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import SwiftUI
 
 class TwoPointers: ObservableObject {
     @Published var result: [Int] = []

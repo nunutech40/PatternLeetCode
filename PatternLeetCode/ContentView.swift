@@ -11,6 +11,8 @@ struct ContentView: View {
     
     @StateObject private var model = ArrayAndHashing()
     @StateObject private var binarySearch = BinarySearch()
+    @StateObject private var maxSubArray = SlidingWindow()
+    @StateObject private var validParentheses = StackPattern()
     
     var body: some View {
         VStack {
@@ -19,6 +21,8 @@ struct ContentView: View {
                 .foregroundStyle(.tint)
             Text("Two Sum Result: \(model.result.map(String.init).joined(separator: ", "))")
             Text("Binary Search Result: \(binarySearch.result)")
+            Text("Sliding Window: \(maxSubArray.result)")
+            Text("Stack -> Valid Parentheses: \(validParentheses.result)")
         }
         .padding()
     }

@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import SwiftUI
 
 class BinarySearch: ObservableObject {
     
@@ -15,7 +14,6 @@ class BinarySearch: ObservableObject {
     init () {
         result = binarySearch([2, 3, 4, 10, 40], 5)
     }
-
     
     /// Temukan index dari target value dalam sebuah array yang terurut menggunakan binary search
     /// - Parameters:
