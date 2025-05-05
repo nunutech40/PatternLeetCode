@@ -95,4 +95,85 @@ class ManipulationStringTest: XCTestCase {
         let result = manipulationString.analisisString(input)
         XCTAssertEqual(result as NSDictionary, expectedOutput as NSDictionary, "Multiple Spasi dihitung 1 spasi")
     }
+    
+    // Test Case 1:  input => "Kontak: Budi (budi@example.com, 08123456789), Ani (ani@example.co.id, 08198765432), Joko (joko@invalid, 12345)", output =>
+    //    [
+    //        ["nama": "Budi", "email": "budi@example.com", "telepon": "08123456789"],
+    //        ["nama": "Ani", "email": "ani@example.co.id", "telepon": "08198765432"]
+    //    ]
+    func testEkstrakKontakEmailDanTeleponInvalid() {
+        let input = "Kontak: Budi (budi@example.com, 08123456789), Ani (ani@example.co.id, 08198765432), Joko (joko@invalid, 12345)"
+        let expectedOutput: [[String: String]] =
+            [
+                ["nama": "Budi", "email": "budi@example.com", "telepon": "08123456789"],
+                ["nama": "Ani", "email": "ani@example.co.id", "telepon": "08198765432"]
+            ]
+        let result = manipulationString.ekstrakKontak(input)
+        XCTAssertEqual(result, expectedOutput, "Email dan kontak invalid, data tidak disave.")
+    }
+    // Test Case 2: input => "Kontak: Budi (budi@example.com, 08123456789), Ani (ani@example.co.id, 08198765432), Joko (joko@gmail.com, 12345)", output =>
+    //    [
+    //        ["nama": "Budi", "email": "budi@example.com", "telepon": "08123456789"],
+    //        ["nama": "Ani", "email": "ani@example.co.id", "telepon": "08198765432"]
+    //        ["nama": "Joko", "email": "joko@gmail.com", "telepon": ""]
+    //    ]
+    func testEkstrakKontakTeleponInvalid() {
+        let input = "Kontak: Budi (budi@example.com, 08123456789), Ani (ani@example.co.id, 08198765432), Joko (joko@gmail.com, 12345)"
+        let expectedOutput: [[String: String]] =
+            [
+                ["nama": "Budi", "email": "budi@example.com", "telepon": "08123456789"],
+                ["nama": "Ani", "email": "ani@example.co.id", "telepon": "08198765432"],
+                ["nama": "Joko", "email": "joko@gmail.com", "telepon": ""]
+            ]
+        let result = manipulationString.ekstrakKontak(input)
+        XCTAssertEqual(result, expectedOutput, "Telepon invalid, data saved without telepon.")
+    }
+    // Test Case 3: input => "Kontak: Budi (budi@hallohalo, 08123456789), Ani (ani@example.co.id, 08198765432), Joko (joko@gmail.com, 08923083434)", output =>
+    //    [
+    //        ["nama": "Budi", "email": "", "telepon": "08123456789"],
+    //        ["nama": "Ani", "email": "ani@example.co.id", "telepon": "08198765432"]
+    //        ["nama": "Joko", "email": "joko@gmail.com", "telepon": "08923083434"]
+    //    ]
+    func testEkstrakKontakEmailInvalid() {
+        let input = "Kontak: Budi (budi@hallohalo, 08123456789), Ani (ani@example.co.id, 08198765432), Joko (joko@gmail.com, 08923083434)"
+        let expectedOutput: [[String: String]] =
+            [
+                ["nama": "Budi", "email": "", "telepon": "08123456789"],
+                ["nama": "Ani", "email": "ani@example.co.id", "telepon": "08198765432"],
+                ["nama": "Joko", "email": "joko@gmail.com", "telepon": "08923083434"]
+            ]
+        let result = manipulationString.ekstrakKontak(input)
+        XCTAssertEqual(result, expectedOutput, "Email invalid, data saved without email.")
+    }
+    // Test Case 4: input => "Kontak: Budi (budi@yahoo.com, 08123456789), Ani (ani@example.co.id, 08198765432), Joko (joko@gmail.com, 08923083434)", output =>
+    //    [
+    //        ["nama": "Budi", "email": "budi@yahoo.com", "telepon": "08123456789"],
+    //        ["nama": "Ani", "email": "ani@example.co.id", "telepon": "08198765432"]
+    //        ["nama": "Joko", "email": "joko@gmail.com", "telepon": "08923083434"]
+    //    ]
+    func testEkstrakKontakAllValid() {
+        let input = "Kontak: Budi (budi@yahoo.com, 08123456789), Ani (ani@example.co.id, 08198765432), Joko (joko@gmail.com, 08923083434)"
+        let expectedOutput: [[String: String]] =
+        [
+            ["nama": "Budi", "email": "budi@yahoo.com", "telepon": "08123456789"],
+            ["nama": "Ani", "email": "ani@example.co.id", "telepon": "08198765432"],
+            ["nama": "Joko", "email": "joko@gmail.com", "telepon": "08923083434"]
+        ]
+        let result = manipulationString.ekstrakKontak(input)
+        XCTAssertEqual(result, expectedOutput, "All Valid, all saved 3 dict data full")
+    }
+    // Test Case 5: input => "Kontak 08923083434)", output => []
+    func testEkstrakKontakStringInvalid() {
+        let input = "Kontak 08923083434)"
+        let expectedOutput: [[String: String]] = []
+        let result = manipulationString.ekstrakKontak(input)
+        XCTAssertEqual(result, expectedOutput, "Input string invalid, return empty array.")
+    }
+    // Test Case 6: input => "", output => []
+    func testEkstrakKontakStringKosong() {
+        let input = ""
+        let expectedOutput: [[String: String]] = []
+        let result = manipulationString.ekstrakKontak(input)
+        XCTAssertEqual(result, expectedOutput, "Input empty string, return empty array.")
+    }
 }
