@@ -7,13 +7,7 @@
 
 import Foundation
 
-class SlidingWindow: ObservableObject {
-    
-    @Published var result: Int = 0
-    
-    init() {
-        result = maxSumSubArray([1, 4, 2, 10, 2, 3, 1, 0, 20], 4)
-    }
+class SlidingWindow {
     
     /// Temukan jumlah terbanyak dari sub array dengan panjang subzie = k menggunakan sliding window
     /// - Parameters:
@@ -23,50 +17,55 @@ class SlidingWindow: ObservableObject {
     /// - Note: Asumsikan k itu benar (1 <= k <= arr.count)
     ///
     func maxSumSubArray(_ arr: [Int], _ k: Int) -> Int {
-        // Step 1: Understand The Problem
-        // - Input: Array of Integer (arr), integer k (subarray size)
-        // - Output: Maximum sum of a subarray of size k
-        // - Constraint: 1 <= k <= arr.count, arr can contain negative numbers
-        // - Edge Cases: k = 1, k = arr.count, arr is empty, k > arr.count
+        // 1. Understanding the Problem
+        // Problem Statement: Cari jumlah urutan terbesar dari k angka di dalam sebuah n (array int)
+        // Ex: input: [2, 1, 5, 1, 3, 2], output: k = 3
+        // Input: Arr Int
+        // Output: Int
+        // Constraint: n >= k
+        // Edge Cases: n < k, n = x (item sama),
         
-        // Step 2: Devise a Plan
-        // - Use a fixed-size sliding window of size k
-        // - Compute the sum of the first window (first k elements)
-        // - Slide the window accros the array:
-        //   - Substract the leftmost element of the previous window -> substract itu kurangkan -> kurangkan atau buang element paling kiri dari window
-        //   - Add the next element to the right
-        //   - Update the maximum sum, if the current window sum is larger
-        // - Return the maximum found
+        // 2. Algoritma Design
+        // Devise Plan
+        // Loop arr integer n
+        // Utk setiap 3 angka berdasarkan left dan right, jumlahkan
+        // catat jumlah terbesar yg pernah dilakukan
         
-        // Step 3: Write Pseuducode
-        // if arr is empty or k <= 0 or k > arr length: return 0
-        // initialize windowSum = sum of first k elements
-        // initialize maxSum = windowSum
-        // for i from k to arr length - 1:
-        //   windowSum = windowSum - arr[i - k] + arr[i]
-        //   maxSum = max(maxSum, windowSum)
+        // Pseuducode
+        // input arr[Int], k: Int
+        // init left dan right
+        // left = 0
+        // right = k - 1
+        // init maxSum: Int
+        // loop arr[Int]
+        //     sum = prefix(left, right).reduce()
+        //     maxSum = (sum, maxSum)
+        //     increment left and right
         // return maxSum
         
-        // Step 4: Implement Code
-        // Handle edge cases
-        if arr.isEmpty || k <= 0 || k > arr.count {
-            return 0
+        // 3. Coding
+        guard arr.count >= k else { return 0 }
+        
+        var sum = arr.prefix(k).reduce(0, +)
+        
+        var maxSum = sum
+        
+        var left = 0
+        var right = k - 1
+        
+        for _ in right..<(arr.count - 1) {
+            sum -= arr[left]
+            sum += arr[right + 1]
+            
+            maxSum = max(sum, maxSum)
+            
+            left += 1
+            right += 1
         }
         
-        // Compute sum of first window
-        // ambil data dari array, prefix meaning beberapa char awal sampe ka, lalu di reduce (digabung dg operation +)
-        var windowSum = arr.prefix(k).reduce(0, +)
-        var maxSum = windowSum
+        return maxSum
         
-        for i in k..<arr.count - 1 {
-            // hapus value sejumlah first value dalam windowsum
-            // arr[i - k] -> artinya, jika i = k(misal length 3), akan dikurangi sejumlah length dari k(3-3 = 0)
-            // -> untuk mendapatkan first value pada subsarray / window
-            windowSum = windowSum - arr[i - k] + arr[i]
-            maxSum = max(maxSum, windowSum)
-        }
-        
-        // Step 5: Test and Refine
+        // 4. Testing
         // - Test Case 1: arr = [1, 4, 2, 10, 2, 3, 1, 0, 20], k = 4 -> Expected: 24 ([10, 2, 3, 1])
         // - Test Case 2: arr = [1], k = 1 -> Expected: 1
         // - Test Case 3: arr = [1, 2, 3], k = 3 -> Expected: 6
@@ -74,8 +73,100 @@ class SlidingWindow: ObservableObject {
         // - Refinement: Consider handling negative numbers
         // - Optimization: Code is already O(n) time, O(1) space, no futher optimization needed
         
-        return maxSum
+    }
+    
+    func longestStringWithoutRepeatingChar(_ strInput: String) -> String {
+        // 1. Understanding the problem
+        // ex: abcabcbb, output: "abc"
+        // Problem: cari substring terpanjang tanpa character berulang
+        // Input: String
+        // Output: String
+        // Constraint: - no constraint
+        // Edge Cases: str = empty
         
+        // 2. Algoritma Design
+        // Devise Plan
+        // - gunakan sliding widow dinamis
+        // - buat indexCatatan, catatanMap (char:indexCatatan), result
+        // - looping input string utk setiap char
+        //      cek apakah char ada di catatanMap?
+        //      jika tidak
+        //          indexCatatan increment
+        //          insert-> catatanmap char:indexCatatan
+        //      jika ya
+        //          reset catatanMap, indexCatatan, dan pilih count result yg lebih panjang
+        //   kembalikan resultnya
+        
+        
+        // Pseducode
+        // input -> strInput: String
+        // init indexCatatan = 0
+        // init catatanMap = [Char:Int]
+        // init result = ""
+        // init left = 0
+        // init right = 0
+        // while right <= strInput.count - 1
+        //      indexChar = strIndex(left)
+        //      getChar = getChar(indexChar)
+        //      if let existChar == catatanMap[getChar] // jika ada char yg sama lalukan reset
+        //           catatanMap = [:]
+        //           indexCatatan = 0
+        //           getPrefixStrInput(left, right)
+        //           if result.count < getPrefixStrInput.count
+        //              result = getPrefixStrInput
+        //           left = right + 1
+        //           right = left
+        //      else
+        //           indexCatatan += 1
+        //           right += 1
+        //           catatanMap[getChar] = indexCatatan // masukan ke catatan
+        
+        // 3. Coding
+        var indexCatatan = 0
+        var catatanMap: [Character: Int] = [:]
+        var result = ""
+        
+        var left = 0
+        var right = 0
+        
+        while right < strInput.count {
+            let indexChar = strInput.index(strInput.startIndex, offsetBy: right)
+            let getChar = strInput[indexChar]
+            
+            if let _ = catatanMap[getChar] {
+                
+                // get prefix
+                let sliceStart = strInput.index(strInput.startIndex, offsetBy: left)
+                let sliceEnd = strInput.index(strInput.startIndex, offsetBy: right)
+                let currentSlice = String(strInput[sliceStart..<sliceEnd])
+                
+                // pilih longest string without repeat, from result or currentSlice
+                if currentSlice.count > result.count {
+                    result = currentSlice
+                }
+                
+                // reset left, right, indexCatatan, catatanMap
+                left += 1
+                right = left
+                indexCatatan = 0
+                catatanMap = [:]
+                
+            } else {
+                // record char
+                indexCatatan += 1
+                catatanMap[getChar] = indexCatatan
+                right += 1
+            }
+        }
+        if indexCatatan > result.count {
+            let sliceStart = strInput.index(strInput.startIndex, offsetBy: left)
+            let sliceEnd = strInput.index(strInput.startIndex, offsetBy: right)
+            let currentSlice = String(strInput[sliceStart..<sliceEnd])
+            result = currentSlice
+        }
+        return result
+        
+        // 4. Testing
     }
     
 }

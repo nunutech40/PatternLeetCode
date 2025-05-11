@@ -105,7 +105,6 @@ class ReverseArray {
     }
     
     func reverseArrayInt(_ nums: inout [Int]) -> [Int] {
-        print("cek nums awal: \(nums)")
         guard nums.count > 1 else {
             return nums
         }
@@ -119,7 +118,6 @@ class ReverseArray {
             left += 1
             right -= 1
         }
-        print("cek nums result: \(nums)")
         return nums
     }
     

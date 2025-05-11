@@ -77,13 +77,12 @@ class ArrayAndHashing: ObservableObject {
         
         for (index, value) in listAngka.enumerated() {
             // enumerated dari [2, 7, 11, 15, 17] = (0, 2),(1, 7),(2, 11),(3, 15)
-            catatan[value] = index
-            
             let complement = target - value
             if let complementIndex = catatan[complement] {
                 return [complementIndex, index]
             }
-        }
+            catatan[value] = index
+         }
         return []
     }
 }
